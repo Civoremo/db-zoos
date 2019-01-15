@@ -75,6 +75,21 @@ server.put('/api/zoos/:id', (req, res) => {
 });
 
 //delete
+server.delete('/api/zoos/:id', (req, res) => {
+  db('zoos')
+    .where({ id: req.params.id })
+    .del()
+    .then(count => {
+      if(count >= 1) {
+        res.status(200).json({ count: `Zoo has been deleted` });
+      } else {
+        res.status(404).json({ error: 'Zoo ID could not be found' });
+      }
+    })
+    .catch(err => {
+      res.status(500).json({ error: 'Server error, try again' });
+    });
+});
 
 const port = 3300;
 server.listen(port, function() {
