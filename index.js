@@ -12,7 +12,7 @@ server.use(helmet());
 
 // endpoints here
 
-// get
+// get zoos
 server.get('/api/zoos', (req, res) => {
   db('zoos')
     .then(result => {
@@ -23,7 +23,7 @@ server.get('/api/zoos', (req, res) => {
     });
 });
 
-// get by id
+// get zoo by id
 server.get('/api/zoos/:id', (req, res) => {
   db('zoos')
     .where({ id: req.params.id })
@@ -39,7 +39,7 @@ server.get('/api/zoos/:id', (req, res) => {
     });
 });
 
-// add
+// add zoo
 server.post('/api/zoos', (req, res) => {
   if(req.body.name) {
     db('zoos')
@@ -55,7 +55,7 @@ server.post('/api/zoos', (req, res) => {
   }
 });
 
-// update
+// update zoo
 server.put('/api/zoos/:id', (req, res) => {
   if(req.body.name) {
     db('zoos')
@@ -74,7 +74,7 @@ server.put('/api/zoos/:id', (req, res) => {
   }
 });
 
-//delete
+//delete zoo
 server.delete('/api/zoos/:id', (req, res) => {
   db('zoos')
     .where({ id: req.params.id })
@@ -88,6 +88,32 @@ server.delete('/api/zoos/:id', (req, res) => {
     })
     .catch(err => {
       res.status(500).json({ error: 'Server error, try again' });
+    });
+});
+
+// get bears
+server.get('/api/bears', (req, res) => {
+  db('bears')
+    .then(bears => {
+      res.status(200).json(bears);
+    })
+    .catch(err => {
+      res.status(500).json({ error: 'Server error retrieving bears' });
+    });
+});
+
+server.get('/api/bears/:id', (req, res) => {
+  db('bears')
+    .where({ id: req.params.id })
+    .then(bear => {
+      if(bear.length >= 1) {
+        res.status(200).json(bear);
+      } else {
+        res.status(404).json({ message: 'Bear with that ID could not be found' });
+      }
+    })
+    .catch(err => {
+      res.status(500).json({ error: 'Server error finding bear by id' });
     });
 });
 
