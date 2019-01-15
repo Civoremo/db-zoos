@@ -22,7 +22,22 @@ server.get('/api/zoos', (req, res) => {
       res.status(500).json(err);
     });
 });
+
 // add
+server.post('/api/zoos', (req, res) => {
+  if(req.body.name) {
+    db('zoos')
+      .insert(req.body)
+      .then(id => {
+          res.status(201).json(id);
+      })
+      .catch(err => {
+        res.status(409).json({error: 'Name might already exist'});
+      });
+  } else {
+    res.status(412).json({ error: 'Please submit a name'});
+  }
+});
 
 // update
 
