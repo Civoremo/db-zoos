@@ -136,6 +136,7 @@ server.post('/api/bears', (req, res) => {
 
 // update bear
 server.put('/api/bears/:id', (req, res) => {
+  
   if(req.body.name) {
     db('bears')
       .where({ id: req.params.id })
