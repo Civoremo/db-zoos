@@ -134,6 +134,42 @@ server.post('/api/bears', (req, res) => {
   }
 });
 
+// update bear
+server.put('/api/bears/:id', (req, res) => {
+  if(req.body.name) {
+    db('bears')
+      .where({ id: req.params.id })
+      .update(req.body)
+      .then(count => {
+        if(count >= 1) {
+          res.status(200).json(count);
+        } else {
+          res.status(404).json({ message: 'Bear not found' });
+        }
+      })
+      .catch();
+  } else {
+    res.status(412).json({ error: 'Please provide key for name' });
+  }
+});
+
+// delete bear
+server.delete('/api/bears/:id', (req, res) => {
+  db('bears')
+    .where({ id: req.params.id })
+    .del()
+    .then(count => {
+      if(count >= 1) {
+        res.status(200).json({ count: "Bear has been deleted" });
+      } else {
+        res.status(404).json({ error: 'Bear ID not found' });
+      }
+    })
+    .catch(err => {
+      res.status(500).json({ error: 'Server error deleting column' });
+    });
+});
+
 
 const port = 3300;
 server.listen(port, function() {
