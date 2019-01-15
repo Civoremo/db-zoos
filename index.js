@@ -23,6 +23,22 @@ server.get('/api/zoos', (req, res) => {
     });
 });
 
+// get by id
+server.get('/api/zoos/:id', (req, res) => {
+  db('zoos')
+    .where({ id: req.params.id })
+    .then(zoo => {
+      if(zoo.length >= 1) {
+        res.status(200).json(zoo);
+      } else {
+        res.status(404).json({ message: 'Zoo ID could not be found'});
+      }
+    })
+    .catch(err => {
+      res.status(500).json(err);
+    });
+});
+
 // add
 server.post('/api/zoos', (req, res) => {
   if(req.body.name) {
