@@ -102,6 +102,7 @@ server.get('/api/bears', (req, res) => {
     });
 });
 
+// get bear by id
 server.get('/api/bears/:id', (req, res) => {
   db('bears')
     .where({ id: req.params.id })
@@ -116,6 +117,23 @@ server.get('/api/bears/:id', (req, res) => {
       res.status(500).json({ error: 'Server error finding bear by id' });
     });
 });
+
+// post new bear
+server.post('/api/bears', (req, res) => {
+  if(req.body.name) {
+    db('bears')
+      .insert(req.body)
+      .then(id => {
+        res.status(201).json(id);
+      })
+      .catch(err => {
+        res.status(409).json({ error: 'Bear might already exist, try another' });
+      });
+  } else {
+    res.status(412).json({ error: 'Please provide name' });
+  }
+});
+
 
 const port = 3300;
 server.listen(port, function() {
